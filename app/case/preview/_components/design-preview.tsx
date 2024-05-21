@@ -15,7 +15,7 @@ import { useMutation } from "@tanstack/react-query";
 const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
   const [showConfetti, setShowConfetti] = useState(false);
 
-  useEffect(() => setShowConfetti(true));
+  useEffect(() => setShowConfetti(true), []);
   const { color, model, finish, material } = configuration;
   const tw = COLORS.find(({ value }) => value === color)?.tw;
 
