@@ -34,7 +34,7 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
 
   const {} = useMutation({
     mutationKey: ["get-checkout-session"],
-    mutationFn: [],
+    // mutationFn: [],
   });
 
   return (
