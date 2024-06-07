@@ -10,11 +10,12 @@ export const publicRoutes = [
   "/case/design",
   "/case/upload",
   "/case/preview",
+  "/api/auth/providers",
 ];
 
 /**
  * Routes used for authentication
- * These routes will redirect logged in users to /settings
+ * These routes will redirect logged in users to /
  * @type {string[]}
  */
 export const authRoutes = [
@@ -30,7 +31,14 @@ export const authRoutes = [
  * Routes that start with prefix are used for authentication purpose
  * @type {string}
  */
-export const apiAuthPrefix = ["/api/auth", "/api/uploadthing"];
+export const apiAuthPrefix = "/api/auth";
+
+/**
+ * Api routes
+ * These routes are for api purpose
+ * @type {string}
+ */
+export const apiRoutes = ["/api/uploadthing"];
 
 /**
  * The default redirect path after logging in

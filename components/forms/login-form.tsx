@@ -141,13 +141,8 @@ export const LoginForm = () => {
                   />
                 </>
               )}
-              <Button
-                size={"sm"}
-                variant={"link"}
-                asChild
-                className="px-0 font-normal"
-              >
-                <Link href={"/auth/reset"}>Forgot password?</Link>
+              <Button size={"sm"} variant={"link"} className="px-0 font-normal">
+                <Link href={"/reset"}>Forgot password?</Link>
               </Button>
             </div>
             <FormError message={error || urlError} />

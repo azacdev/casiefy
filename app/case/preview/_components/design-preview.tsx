@@ -4,16 +4,30 @@ import { useEffect, useState } from "react";
 import Confetti from "react-dom-confetti";
 import { Configuration } from "@prisma/client";
 import { ArrowRight, Check } from "lucide-react";
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 
+import CreateCheckoutSession from "@/actions/create-checkout-session";
 import { cn, formatPrice } from "@/lib/utils";
 import { BASE_PRICE, PRODUCT_PRICES } from "@/config/products";
 import { COLORS, MODELS } from "@/validators/option-validators";
 import Phone from "@/components/phone";
 import { Button } from "@/components/ui/button";
-import { useMutation } from "@tanstack/react-query";
+import { useToast } from "@/components/ui/use-toast";
+import LoginModal from "@/components/login-modal";
 
 const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
+  // const session = useSession();
+  // const user = session?.data?.user;
+  const user = "";
+  const { id } = configuration;
+
+  const router = useRouter();
   const [showConfetti, setShowConfetti] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const { toast } = useToast();
 
   useEffect(() => setShowConfetti(true), []);
   const { color, model, finish, material } = configuration;
@@ -32,10 +46,38 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
     totalPrice += PRODUCT_PRICES.finish.textured;
   }
 
-  const {} = useMutation({
+  const { mutate: createPaymentSession } = useMutation({
     mutationKey: ["get-checkout-session"],
-    // mutationFn: [],
+    mutationFn: CreateCheckoutSession,
+    onSuccess: ({ url }) => {
+      if (url) {
+        const data = JSON.parse(url);
+
+        router.push(data.data.authorization_url);
+        console.log(data.data.authorization_url);
+      } else {
+        throw new Error("Unable to retrieve URL.");
+      }
+    },
+    onError: () => {
+      toast({
+        title: "Something went wrong",
+        description: "There was an error on our end. Please try again",
+        variant: "destructive",
+      });
+    },
   });
+
+  const handleCheckout = () => {
+    if (user) {
+      // create payment session
+      createPaymentSession({ configId: id });
+    } else {
+      // need to log in
+      localStorage.setItem("configurationId", id);
+      setIsOpen(true);
+    }
+  };
 
   return (
     <>
@@ -48,6 +90,8 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
           config={{ elementCount: 200, spread: 90 }}
         />
       </div>
+
+      <LoginModal isOpen={isOpen} setIsOpen={setIsOpen} />
 
       <div className="mt-20 grid grid-cols-1 text-sm sm:grid-cols-12 sm:grid-rows-1 sm:gap-x-6 md:gap-x-8 lg:gap-x-12">
         <div className="sm:col-span-4 md:col-span-3 md:row-span-2 md:row-end-2">
@@ -129,7 +173,10 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
             </div>
 
             <div className="mt-8 flex justify-end pb-12">
-              <Button className="px-4 sm:px-6 lg:px-8">
+              <Button
+                className="px-4 sm:px-6 lg:px-8"
+                onClick={() => handleCheckout()}
+              >
                 Check out <ArrowRight className="h-4 w-4 ml-1.5 inline" />{" "}
               </Button>
             </div>

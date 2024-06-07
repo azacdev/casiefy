@@ -5,7 +5,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 
 import authConfig from "@/auth.config";
 import { getUserById } from "@/data/user";
-import { getTwoFactorConfirmationByUserId } from "./data/two-factor-confirmation";
+import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
 
 export const {
   handlers: { GET, POST },
@@ -38,10 +38,14 @@ export const {
       // Prevent sign in without email verification
       if (!existingUser?.emailVerified) return false;
 
+      console.log(existingUser);
+
       if (existingUser.isTwoFactorEnabled) {
         const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(
           existingUser.id
         );
+
+        console.log({ twoFactorConfirmation });
 
         if (!twoFactorConfirmation) return false;
 

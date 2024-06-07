@@ -49,7 +49,43 @@ const CreateCheckoutSession = async ({ configId }: { configId: string }) => {
     });
   }
 
-  
+  const fields = {
+    email: user.email,
+    amount: price * 100,
+    metadata: {
+      userId: user.id,
+      orderId: order.id,
+      // state: values.state,
+      // firstname: values.firstname,
+      // phone: values.phone,
+      // totalPrice: totalAmount,
+      // items: items,
+      // productList: items
+      //   .map((item: Product) => `${item.name} (${item.quantity})`)
+      //   .join(", "),
+      //  productList: "",
+      cancel_action: `http://localhost:3000/case/preview?id=${configuration.id}`,
+    },
+  };
+
+  const url = "https://api.paystack.co/transaction/initialize";
+
+  const paystackResponse = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+    },
+    body: JSON.stringify(fields),
+  });
+
+  if (!paystackResponse.ok) {
+    throw new Error(`Paystack API returned status ${paystackResponse.status}`);
+  }
+
+  const paystackResult = await paystackResponse.json();
+
+  return { url: JSON.stringify(paystackResult) };
 };
 
 export default CreateCheckoutSession;

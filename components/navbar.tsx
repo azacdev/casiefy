@@ -12,7 +12,7 @@ import { LogOutButton } from "@/components/auth/logout-button";
 const Navbar = () => {
   const session = useSession();
   const user = session?.data?.user;
-  
+
   const pathname = usePathname();
   const isLoginPage = pathname === "/login";
   const isSignupPage = pathname === "/signup";
