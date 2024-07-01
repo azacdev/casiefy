@@ -42,14 +42,14 @@ const LoginModal = ({ isOpen, setIsOpen }: LoginModalProps) => {
 
         <div className="grid grid-cols-2 gap-6 divide-x divide-gray-200">
           <Link
-            href={"/login"}
+            href={"/login?case/preview"}
             className={buttonVariants({ variant: "outline" })}
           >
             Login
           </Link>
 
           <Link
-            href={"/signup"}
+            href={"/signup?case/preview"}
             className={buttonVariants({ variant: "default" })}
           >
             Sign up
