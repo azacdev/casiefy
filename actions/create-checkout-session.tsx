@@ -70,7 +70,7 @@ const CreateCheckoutSession = async ({
 
   const fields = {
     email: user.email,
-    amount: price * 100,
+    amount: price,
     metadata: {
       userId: user.id,
       orderId: order.id,
