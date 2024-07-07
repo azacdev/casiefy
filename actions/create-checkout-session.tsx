@@ -86,7 +86,8 @@ const CreateCheckoutSession = async ({
         price: price,
         quantity: 1,
       },
-      cancel_action: `http://localhost:3000/checkout?id=${configuration.id}`,
+      cancel_action: `${process.env.NEXT_PUBLIC_APP_URL}/checkout?id=${configuration.id}`,
+      callback_url: `${process.env.NEXT_PUBLIC_APP_URL}/thank-you?orderId=${order.id}`,
     },
   };
 
