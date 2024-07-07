@@ -11,6 +11,8 @@ export const publicRoutes = [
   "/case/upload",
   "/case/preview",
   "/api/auth/providers",
+  "/checkout",
+  "/auth-callback",
 ];
 
 /**
@@ -38,10 +40,10 @@ export const apiAuthPrefix = "/api/auth";
  * These routes are for api purpose
  * @type {string}
  */
-export const apiRoutes = ["/api/uploadthing"];
+export const apiRoutes = ["/api/uploadthing", "/api/webhook"];
 
 /**
  * The default redirect path after logging in
  * @type {string}
  * **/
-export const DEFAULT_LOGIN_REDIRECT = "/";
+export const DEFAULT_LOGIN_REDIRECT = "/auth-callback";

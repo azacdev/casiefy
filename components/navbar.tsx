@@ -16,11 +16,12 @@ const Navbar = () => {
   const pathname = usePathname();
   const isLoginPage = pathname === "/login";
   const isSignupPage = pathname === "/signup";
+  const isCheckoutPage = pathname.includes("/checkout");
 
   return (
     <nav
       className={`sticky z-[100] h-14 inset-x-0 top-0 w-full border-b border-gray-200 bg-white/75 backdrop-blur-lg transition-all ${
-        isLoginPage || isSignupPage ? "hidden" : ""
+        isLoginPage || isSignupPage || isCheckoutPage ? "hidden" : ""
       }`}
     >
       <MaxWidthWrapper>

@@ -1,11 +1,27 @@
 "use server";
 
-import { BASE_PRICE, PRODUCT_PRICES } from "@/config/products";
+import { Order } from "@prisma/client";
 import db from "@/lib/db";
 import getSession from "@/lib/get-session";
-import { Order } from "@prisma/client";
+import { BASE_PRICE, PRODUCT_PRICES } from "@/config/products";
+interface CreateCheckoutSessionProps {
+  configId: string;
+  shippingInfo: {
+    contact: string;
+    country: string;
+    name: string;
+    address: string;
+    apartment?: string;
+    city: string;
+    state: string;
+    zipcode: string;
+  };
+}
 
-const CreateCheckoutSession = async ({ configId }: { configId: string }) => {
+const CreateCheckoutSession = async ({
+  configId,
+  shippingInfo,
+}: CreateCheckoutSessionProps) => {
   const configuration = await db.configuration.findUnique({
     where: { id: configId },
   });
@@ -16,6 +32,9 @@ const CreateCheckoutSession = async ({ configId }: { configId: string }) => {
 
   const session = await getSession();
   const user = session?.user;
+
+  const { name, country, state, zipcode, city, contact, address, apartment } =
+    shippingInfo;
 
   if (!user) {
     throw new Error("You need to be logged in");
@@ -55,16 +74,19 @@ const CreateCheckoutSession = async ({ configId }: { configId: string }) => {
     metadata: {
       userId: user.id,
       orderId: order.id,
-      // state: values.state,
-      // firstname: values.firstname,
-      // phone: values.phone,
-      // totalPrice: totalAmount,
-      // items: items,
-      // productList: items
-      //   .map((item: Product) => `${item.name} (${item.quantity})`)
-      //   .join(", "),
-      //  productList: "",
-      cancel_action: `http://localhost:3000/case/preview?id=${configuration.id}`,
+      phone: contact,
+      name: name,
+      country: country,
+      state: state,
+      city: city,
+      address: address,
+      apartment: apartment,
+      zipcode: zipcode,
+      product: {
+        price: price,
+        quantity: 1,
+      },
+      cancel_action: `http://localhost:3000/checkout?id=${configuration.id}`,
     },
   };
 

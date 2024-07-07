@@ -2,7 +2,7 @@
 
 import * as z from "zod";
 import Image from "next/image";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
@@ -35,6 +35,7 @@ export const LoginForm = () => {
   const [showTwoFactor, setShowTwoFactor] = useState(false);
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
+  const [configId, setConfigId] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof LoginSchema>>({
@@ -45,6 +46,12 @@ export const LoginForm = () => {
       code: "",
     },
   });
+
+  useEffect(() => {
+    const configurationId = localStorage.getItem("configurationId");
+
+    if (configurationId) setConfigId(configurationId);
+  }, []);
 
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
     setError("");

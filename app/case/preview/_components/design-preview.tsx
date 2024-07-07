@@ -1,16 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Confetti from "react-dom-confetti";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
 import { Configuration } from "@prisma/client";
 import { ArrowRight, Check } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
 
-import CreateCheckoutSession from "@/actions/create-checkout-session";
 import { cn, formatPrice } from "@/lib/utils";
 import { BASE_PRICE, PRODUCT_PRICES } from "@/config/products";
+import CreateCheckoutSession from "@/actions/create-checkout-session";
 import { COLORS, MODELS } from "@/validators/option-validators";
 import Phone from "@/components/phone";
 import { Button } from "@/components/ui/button";
@@ -18,9 +18,9 @@ import { useToast } from "@/components/ui/use-toast";
 import LoginModal from "@/components/login-modal";
 
 const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
-  // const session = useSession();
-  // const user = session?.data?.user;
-  const user = "";
+  const session = useSession();
+  const user = session?.data?.user;
+
   const { id } = configuration;
 
   const router = useRouter();
@@ -30,6 +30,7 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
   const { toast } = useToast();
 
   useEffect(() => setShowConfetti(true), []);
+
   const { color, model, finish, material } = configuration;
   const tw = COLORS.find(({ value }) => value === color)?.tw;
 
@@ -46,32 +47,31 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
     totalPrice += PRODUCT_PRICES.finish.textured;
   }
 
-  const { mutate: createPaymentSession } = useMutation({
-    mutationKey: ["get-checkout-session"],
-    mutationFn: CreateCheckoutSession,
-    onSuccess: ({ url }) => {
-      if (url) {
-        const data = JSON.parse(url);
+  // const { mutate: createPaymentSession } = useMutation({
+  //   mutationKey: ["get-checkout-session"],
+  //   mutationFn: CreateCheckoutSession,
+  //   onSuccess: ({ url }) => {
+  //     if (url) {
+  //       const data = JSON.parse(url);
 
-        router.push(data.data.authorization_url);
-        console.log(data.data.authorization_url);
-      } else {
-        throw new Error("Unable to retrieve URL.");
-      }
-    },
-    onError: () => {
-      toast({
-        title: "Something went wrong",
-        description: "There was an error on our end. Please try again",
-        variant: "destructive",
-      });
-    },
-  });
+  //       router.push(data.data.authorization_url);
+  //       console.log(data.data.authorization_url);
+  //     } else {
+  //       throw new Error("Unable to retrieve URL.");
+  //     }
+  //   },
+  //   onError: () => {
+  //     toast({
+  //       title: "Something went wrong",
+  //       description: "There was an error on our end. Please try again",
+  //       variant: "destructive",
+  //     });
+  //   },
+  // });
 
   const handleCheckout = () => {
     if (user) {
-      // create payment session
-      createPaymentSession({ configId: id });
+      router.push(`/checkout?id=${id}`);
     } else {
       // need to log in
       localStorage.setItem("configurationId", id);
@@ -139,7 +139,7 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
                 <div className="flex items-center justify-between py-1 mt-2">
                   <p className="text-gray-600">Base price</p>
                   <p className="font-medium text-gray-900">
-                    {formatPrice(BASE_PRICE)}
+                    {formatPrice(BASE_PRICE / 100)}
                   </p>
                 </div>
 
@@ -175,9 +175,11 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
             <div className="mt-8 flex justify-end pb-12">
               <Button
                 className="px-4 sm:px-6 lg:px-8"
+                // onClick={() => handleCheckout()}
                 onClick={() => handleCheckout()}
               >
-                Check out <ArrowRight className="h-4 w-4 ml-1.5 inline" />{" "}
+                Proceed to Checkout{" "}
+                <ArrowRight className="h-4 w-4 ml-1.5 inline" />{" "}
               </Button>
             </div>
           </div>
