@@ -15,11 +15,11 @@ const ThankYou = () => {
   useEffect(() => {
     if (reference) {
       // Fetch transaction details from your server or directly from Paystack
-      fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/transaction?reference=${reference}`)
+      fetch(`/api/transaction?reference=${reference}`)
         .then((response) => response.json())
         .then((data) => {
           console.log(data);
-          
+
           setTransaction(data);
           // Update the order status in your database if necessary
         });
