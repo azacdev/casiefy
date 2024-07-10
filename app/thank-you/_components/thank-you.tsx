@@ -15,7 +15,11 @@ const ThankYou = () => {
   useEffect(() => {
     if (reference) {
       // Fetch transaction details from your server or directly from Paystack
-      fetch(`/api/transaction?reference=${reference}`)
+      fetch(`https://api.paystack.co/transaction/verify/${reference}`, {
+        headers: {
+          Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
+        },
+      })
         .then((response) => response.json())
         .then((data) => {
           console.log(data);
