@@ -4,44 +4,65 @@ import { getPaymentStatus } from "@/actions/get-payment-status";
 import { useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const ThankYou = () => {
   const searchParams = useSearchParams();
-  const orderId = searchParams.get("orderId") || "";
+  const reference = searchParams.get("reference") || "";
 
-  const { data } = useQuery({
-    queryKey: ["get-payment-status"],
-    queryFn: async () => await getPaymentStatus({ orderId }),
-    retry: true,
-    retryDelay: 500,
-  });
+  const [transaction, setTransaction] = useState();
 
-  if (data === undefined) {
-    return (
-      <div className="w-full mt-24 flex justify-center">
-        <div className="flex flex-col items-center gap-2">
-          <Loader2 className="h-8 w-8 animate-spin text-zinc-500" />
-          <h3 className="font-semibold text-xl">Loading your order...</h3>
-          <p>This wont take long.</p>
-        </div>
-      </div>
-    );
-  }
+  useEffect(() => {
+    if (reference) {
+      // Fetch transaction details from your server or directly from Paystack
+      fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/transaction?reference=${reference}`)
+        .then((response) => response.json())
+        .then((data) => {
+          console.log(data);
+          
+          setTransaction(data);
+          // Update the order status in your database if necessary
+        });
+    }
+  }, [reference]);
 
-  if (data == false) {
-    return (
-      <div className="w-full mt-24 flex justify-center">
-        <div className="flex flex-col items-center gap-2">
-          <Loader2 className="h-8 w-8 animate-spin text-zinc-500" />
-          <h3 className="font-semibold text-xl">Veryfying your payment...</h3>
-          <p>This might take a moment.</p>
-        </div>
-      </div>
-    );
-  }
+  // console.log(transaction);
 
-  const { configuration, billingAddress, shippingAddress, amount } = data;
-  const { color } = configuration;
+  // const orderId = "";
+
+  // const { data } = useQuery({
+  //   queryKey: ["get-payment-status"],
+  //   queryFn: async () => await getPaymentStatus({ orderId }),
+  //   retry: true,
+  //   retryDelay: 500,
+  // });
+
+  //   if (data === undefined) {
+  //     return (
+  //       <div className="w-full mt-24 flex justify-center">
+  //         <div className="flex flex-col items-center gap-2">
+  //           <Loader2 className="h-8 w-8 animate-spin text-zinc-500" />
+  //           <h3 className="font-semibold text-xl">Loading your order...</h3>
+  //           <p>This wont take long.</p>
+  //         </div>
+  //       </div>
+  //     );
+  //   }
+
+  //   if (data == false) {
+  //     return (
+  //       <div className="w-full mt-24 flex justify-center">
+  //         <div className="flex flex-col items-center gap-2">
+  //           <Loader2 className="h-8 w-8 animate-spin text-zinc-500" />
+  //           <h3 className="font-semibold text-xl">Veryfying your payment...</h3>
+  //           <p>This might take a moment.</p>
+  //         </div>
+  //       </div>
+  //     );
+  //   }
+
+  //   const { configuration, billingAddress, shippingAddress, amount } = data;
+  //   const { color } = configuration;
 
   return (
     <div className="bg-white">
@@ -57,7 +78,7 @@ const ThankYou = () => {
 
           <div className="mt-12 text-sm font-medium">
             <p className="text-zinc-900">Order number</p>
-            <p className="mt-2 text-zinc-500">{orderId}</p>
+            {/* <p className="mt-2 text-zinc-500">{orderId}</p> */}
           </div>
         </div>
 
