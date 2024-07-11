@@ -40,7 +40,11 @@ export const apiAuthPrefix = "/api/auth";
  * These routes are for api purpose
  * @type {string}
  */
-export const apiRoutes = ["/api/uploadthing", "/api/webhook"];
+export const apiRoutes = [
+  "/api/uploadthing",
+  "/api/webhook",
+  "/api/verify-transaction",
+];
 
 /**
  * The default redirect path after logging in

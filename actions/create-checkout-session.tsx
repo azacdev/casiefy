@@ -68,6 +68,9 @@ const CreateCheckoutSession = async ({
     });
   }
 
+  console.log(order);
+  
+
   const fields = {
     email: user.email,
     amount: price,
