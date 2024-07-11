@@ -9,6 +9,8 @@ export async function POST(req: Request) {
     const secret = process.env.PAYSTACK_SECRET_KEY;
     const metadata = body.data.metadata;
 
+    console.log(metadata);    
+
     const hash = crypto
       .createHmac("sha512", secret)
       .update(JSON.stringify(req.body))
@@ -40,7 +42,7 @@ export async function POST(req: Request) {
             orderId: null,
           };
 
-          if (!userId || orderId) {
+          if (!userId || !orderId) {
             throw new Error("Invalid request metadata");
           }
 
