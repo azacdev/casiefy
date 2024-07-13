@@ -27,7 +27,7 @@ const Navbar = () => {
       <MaxWidthWrapper>
         {" "}
         <div className="flex h-14 items-center justify-between border-b border-zinc-200">
-          <Link href={"/"} className="flex z-40 font-semibold text-green-600">
+          <Link href={"/"} className="flex z-40 font-semibold text-primary">
             Casiefy{" "}
           </Link>
 
@@ -42,8 +42,11 @@ const Navbar = () => {
 
                 {user.role === "ADMIN" && (
                   <Link
-                    href={"/"}
-                    className={buttonVariants({ size: "sm", variant: "ghost" })}
+                    href={"/dashboard"}
+                    className={buttonVariants({
+                      size: "sm",
+                      variant: "secondary",
+                    })}
                   >
                     Dashboard
                   </Link>
