@@ -3,6 +3,7 @@ import getSession from "@/lib/get-session";
 import { notFound } from "next/navigation";
 
 import db from "@/lib/db";
+import { formatPrice } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -11,7 +12,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { formatPrice } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
 import MaxWidthWrapper from "@/components/max-width-wrapper";
 import {
@@ -22,6 +22,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import StatusDropdown from "./status-dropdown";
 
 export const metadata: Metadata = {
   title: "Dashboard",
@@ -155,6 +156,18 @@ const DashboardPage = async () => {
                       <div className="hidden text-sm text-muted-foreground md:inline">
                         {order.user.email}
                       </div>
+                    </TableCell>
+                    <TableCell className="hidden sm:table-cell">
+                      <StatusDropdown
+                        id={order.id}
+                        orderStatus={order.status}
+                      />
+                    </TableCell>
+                    <TableCell className="hidden sm:table-cell">
+                      {order.createdAt.toLocaleDateString()}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {formatPrice(order.amount)}
                     </TableCell>
                   </TableRow>
                 ))}

@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import db from "@/lib/db";
+import { Resend } from "resend";
 const crypto = require("crypto");
+
+const resend = new Resend(process.env.AUTH_RESEND_KEY);
 
 export async function POST(req: Request) {
   try {
@@ -9,7 +12,7 @@ export async function POST(req: Request) {
     const secret = process.env.PAYSTACK_SECRET_KEY;
     const metadata = body.data.metadata;
 
-    console.log(metadata);    
+    console.log(body.data);
 
     const hash = crypto
       .createHmac("sha512", secret)
@@ -76,6 +79,13 @@ export async function POST(req: Request) {
               },
             },
           });
+
+          // await resend.emails.send({
+          //   from: "onboarding@resend.dev",
+          //   to: email,
+          //   subject: "2FA Code",
+          //   html: `<p>Your 2FA code ${token}</p>`,
+          // });
 
           console.log(
             `${process.env.NEXT_PUBLIC_APP_URL}/thank-you?orderId=${orderId}`
