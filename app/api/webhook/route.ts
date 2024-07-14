@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import db from "@/lib/db";
 import { Resend } from "resend";
+import OrderReceivedEmail from "@/components/emails/order-received-email";
 const crypto = require("crypto");
 
 const resend = new Resend(process.env.AUTH_RESEND_KEY);
@@ -12,7 +13,7 @@ export async function POST(req: Request) {
     const secret = process.env.PAYSTACK_SECRET_KEY;
     const metadata = body.data.metadata;
 
-    console.log(body.data);
+    console.log(body.data.customer);
 
     const hash = crypto
       .createHmac("sha512", secret)
@@ -45,11 +46,13 @@ export async function POST(req: Request) {
             orderId: null,
           };
 
+          const { email } = body.data.customer;
+
           if (!userId || !orderId) {
             throw new Error("Invalid request metadata");
           }
 
-          await db.order.update({
+          const updatedOrder = await db.order.update({
             where: {
               id: orderId,
             },
@@ -80,12 +83,25 @@ export async function POST(req: Request) {
             },
           });
 
-          // await resend.emails.send({
-          //   from: "onboarding@resend.dev",
-          //   to: email,
-          //   subject: "2FA Code",
-          //   html: `<p>Your 2FA code ${token}</p>`,
-          // });
+          await resend.emails.send({
+            from: "onboarding@resend.dev",
+            to: email,
+            subject: "Thanks for your order!",
+            react: OrderReceivedEmail({
+              orderId,
+              orderDate: updatedOrder.createdAt.toLocaleDateString(),
+              // @ts-ignore
+              shippingAddress: {
+                name: name!,
+                city: city!,
+                country: country,
+                postalCode: zipcode,
+                street: address,
+                state: state,
+                phoneNumber: phone,
+              },
+            }),
+          });
 
           console.log(
             `${process.env.NEXT_PUBLIC_APP_URL}/thank-you?orderId=${orderId}`

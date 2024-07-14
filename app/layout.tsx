@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import { Recursive } from "next/font/google";
 
 import "@/styles/globals.css";
@@ -8,13 +7,11 @@ import Providers from "@/components/providers";
 import { Toaster } from "@/components/ui/toaster";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
+import { contructMetedata } from "@/lib/utils";
 
 const recursive = Recursive({ subsets: ["latin"] });
 
-export const metadata: Metadata = {
-  title: "Casiefy",
-  description: "Your image on a custom phone case",
-};
+export const metadata = contructMetedata();
 
 export default async function RootLayout({
   children,

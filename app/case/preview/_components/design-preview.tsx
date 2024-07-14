@@ -6,15 +6,12 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { Configuration } from "@prisma/client";
 import { ArrowRight, Check } from "lucide-react";
-import { useMutation } from "@tanstack/react-query";
 
 import { cn, formatPrice } from "@/lib/utils";
 import { BASE_PRICE, PRODUCT_PRICES } from "@/config/products";
-import CreateCheckoutSession from "@/actions/create-checkout-session";
 import { COLORS, MODELS } from "@/validators/option-validators";
 import Phone from "@/components/phone";
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/components/ui/use-toast";
 import LoginModal from "@/components/login-modal";
 
 const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
@@ -26,8 +23,6 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
   const router = useRouter();
   const [showConfetti, setShowConfetti] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-
-  const { toast } = useToast();
 
   useEffect(() => setShowConfetti(true), []);
 
@@ -46,28 +41,6 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
   if (finish === "textured") {
     totalPrice += PRODUCT_PRICES.finish.textured;
   }
-
-  // const { mutate: createPaymentSession } = useMutation({
-  //   mutationKey: ["get-checkout-session"],
-  //   mutationFn: CreateCheckoutSession,
-  //   onSuccess: ({ url }) => {
-  //     if (url) {
-  //       const data = JSON.parse(url);
-
-  //       router.push(data.data.authorization_url);
-  //       console.log(data.data.authorization_url);
-  //     } else {
-  //       throw new Error("Unable to retrieve URL.");
-  //     }
-  //   },
-  //   onError: () => {
-  //     toast({
-  //       title: "Something went wrong",
-  //       description: "There was an error on our end. Please try again",
-  //       variant: "destructive",
-  //     });
-  //   },
-  // });
 
   const handleCheckout = () => {
     if (user) {
@@ -93,15 +66,15 @@ const DesignPreview = ({ configuration }: { configuration: Configuration }) => {
 
       <LoginModal isOpen={isOpen} setIsOpen={setIsOpen} />
 
-      <div className="mt-20 grid grid-cols-1 text-sm sm:grid-cols-12 sm:grid-rows-1 sm:gap-x-6 md:gap-x-8 lg:gap-x-12">
-        <div className="sm:col-span-4 md:col-span-3 md:row-span-2 md:row-end-2">
+      <div className="mt-20 flex flex-col items-center md:grid grid-cols-1 text-sm sm:grid-cols-12 sm:grid-rows-1 sm:gap-x-6 md:gap-x-8 lg:gap-x-12">
+        <div className="md:col-span-4 lg:col-span-3 md:row-span-2 md:row-end-2">
           <Phone
             imgSrc={configuration.croppedImageUrl!}
-            className={cn(`bg-${tw}`)}
+            className={cn(`bg-${tw} max-w-[150px] md:max-w-full`)}
           />
         </div>
 
-        <div className="mt-6 sm:col-span-9 sm:mt-0 md:row-end-1">
+        <div className="mt-6 sm:col-span-9 md:row-end-1">
           <h3 className="text-3xl font-bold tracking-tight text-gray-900">
             Your {modelLabel} Case
           </h3>
