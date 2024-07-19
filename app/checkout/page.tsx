@@ -56,7 +56,7 @@ const CheckoutPage = async ({ searchParams }: CheckOutPageProps) => {
     <main className="h-full mx-auto max-w-screen-xl px-2.5 md:px-12 py-8">
       <Link
         href={"/"}
-        className="flex z-40 font-semibold text-green-600 py-4 mb-5 lg:py-0 md:px-8 md:hidden"
+        className="flex z-40 font-semibold text-primary py-4 mb-5 lg:py-0 md:px-8 md:hidden"
       >
         Casiefy{" "}
       </Link>
@@ -83,7 +83,7 @@ const CheckoutPage = async ({ searchParams }: CheckOutPageProps) => {
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
-          <CheckoutForm id={id} name={user?.name!}/>
+          <CheckoutForm id={id} name={user?.name!} />
         </div>
 
         <div className="md:sticky top-0 md:p-8 order-1 md:order-2">

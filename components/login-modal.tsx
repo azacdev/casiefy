@@ -19,7 +19,7 @@ interface LoginModalProps {
 const LoginModal = ({ isOpen, setIsOpen }: LoginModalProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
-      <DialogContent className="absolute z-[999]">
+      <DialogContent className="z-[999]">
         <DialogHeader>
           <div className="relative mx-auto w-24 h-24 mb-2">
             <Image

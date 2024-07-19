@@ -34,7 +34,6 @@ import { User } from "lucide-react";
 interface CheckoutFormProps {
   id: string;
   name: string;
-  // lastname: string;
 }
 const CheckoutForm = ({ id, name }: CheckoutFormProps) => {
   const router = useRouter();

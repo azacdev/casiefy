@@ -251,8 +251,6 @@ const DesignForm = ({
                 <RadioGroup
                   value={options.color}
                   onChange={(val) => {
-                    console.log(val);
-
                     setOptions((prev) => ({
                       ...prev,
                       color: val,

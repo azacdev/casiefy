@@ -33,7 +33,7 @@ export default function Home() {
               <p className="mt-8 text-lg lg:pr-10 max-w-prose text-center lg:text-left text-balance md:text-wrap">
                 Capture your favourite memories with your own,{" "}
                 <span className="font-bold">one-of-one</span> phone case.
-                Casiefy allows tou to protect your memories, not just your phone
+                Casiefy allows you to protect your memories, not just your phone
                 case
               </p>
 
